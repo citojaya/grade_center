@@ -3,21 +3,29 @@ import csv
 from pathlib import Path
 
 
-DEFAULT_STUDENTS = "tutotial_all_students.csv"
-DEFAULT_GRADES = "gc_ENGR3020_2026_SPR_columns_2026-08-18-06-00-30.csv"
-DEFAULT_OUTPUT = "gc_ENGR3020_2026_SPR_columns_filtered.csv"
+DEFAULT_STUDENTS = "student_list_proc1008.csv"
+DEFAULT_GRADES = "gc_PROC1008_2026_SPR_columns_2026-08-18-14-57-41.csv"
+DEFAULT_OUTPUT = "gc_PROC1008_2026_SPR_columns_filtered.csv"
 
 
 def read_student_codes(path: Path) -> set[str]:
     with path.open("r", encoding="utf-8-sig", newline="") as file:
         reader = csv.DictReader(file)
-        if not reader.fieldnames or "STUDENT_CODE" not in reader.fieldnames:
+        student_code_column = next(
+            (
+                name
+                for name in reader.fieldnames or []
+                if name.strip().casefold() == "student_code"
+            ),
+            None,
+        )
+        if student_code_column is None:
             raise ValueError(f"{path} does not contain a STUDENT_CODE column")
 
         return {
-            row["STUDENT_CODE"].strip()
+            row[student_code_column].strip().casefold()
             for row in reader
-            if row.get("STUDENT_CODE", "").strip()
+            if row.get(student_code_column, "").strip()
         }
 
 
@@ -34,7 +42,7 @@ def filter_grades(student_codes: set[str], input_path: Path, output_path: Path) 
             kept = 0
             removed = 0
             for row in reader:
-                if row.get("Student ID", "").strip() in student_codes:
+                if row.get("Student ID", "").strip().casefold() in student_codes:
                     writer.writerow(row)
                     kept += 1
                 else:
