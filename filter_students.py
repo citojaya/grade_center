@@ -4,8 +4,8 @@ from pathlib import Path
 
 
 DEFAULT_STUDENTS = "tutotial_all_students.csv"
-DEFAULT_GRADES = "gc_ENGR3020_2026_SPR_columns_2026-08-18-06-00-30.csv"
-DEFAULT_OUTPUT = "gc_ENGR3020_2026_SPR_columns_filtered.csv"
+DEFAULT_GRADES = "gc_ENGR3020_2026_SPR_columns_2026-08-31-21-27-15.csv"
+DEFAULT_OUTPUT = "gc_ENGR3020_2026_SPR_columns_filtered_tutorial5.csv"
 
 
 def read_student_codes(path: Path) -> set[str]:
